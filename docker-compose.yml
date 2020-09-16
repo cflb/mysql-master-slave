@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db-master:
+    image: mottox/mysql-replication
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+      - MYSQL_ROOT_HOST=%
+      - SERVER_ID=1
+    networks:
+      - application-net
+
+  db-slave:
+    image: mottox/mysql-replication
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+      - MYSQL_ROOT_HOST=%
+      - SERVER_ID=2
+      - REPLICATION_MASTER_HOST=db-master
+    links:
+      -  "db-master:replication"
+    networks:
+      - application-net
+
+networks:
+  application-net:
+    driver: bridge
